@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSC Real Estate — Kiro & Iib Guryaha</title>
+    <style>
+        :root {
+            --primary: #e8a849;
+            --primary-dark: #c48b2e;
+            --primary-light: #fdf0d7;
+            --purple: #7c3aed;
+            --purple-dark: #6d28d9;
+            --purple-light: #ede9fe;
+            --bg: #faf9f6;
+            --white: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --blue: #5b9bd5;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 1.5rem;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.5px;
+        }
+        .nav-logo .icon {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .nav-links a, .nav-links button {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .nav-links a:hover, .nav-links button:hover {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+        .nav-links a.active, .nav-links button.active {
+            background: var(--purple);
+            color: #fff;
+            font-weight: 600;
+        }
+        .btn-nav {
+            background: var(--primary) !important;
+            color: #fff !important;
+            padding: 10px 20px !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+        }
+        .btn-nav:hover {
+            background: var(--primary-dark) !important;
+        }
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .mobile-toggle span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: var(--text);
+            margin: 5px 0;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        /* ========== APP CONTAINER ========== */
+        #app {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            min-height: 80vh;
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity:0; transform: translateY(10px); }
+            to { opacity:1; transform: translateY(0); }
+        }
+
+        /* ========== HERO (Home) ========== */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            background: linear-gradient(160deg, #fdf0d7 0%, #faf9f6 40%, #ede9fe 100%);
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 250px;
+            height: 250px;
+            background: rgba(232,168,73,0.12);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: pulseLarge 8s ease-in-out infinite;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 300px;
+            height: 300px;
+            background: rgba(124,58,237,0.08);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: pulseLarge 10s ease-in-out infinite reverse;
+        }
+        .hero .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(232,168,73,0.15);
+            z-index: 0;
+            animation: bubbleFloat 7s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .hero .bubble.purple-bubble {
+            background: rgba(124,58,237,0.12);
+            animation-duration: 9s;
+        }
+        @keyframes pulseLarge {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        @keyframes bubbleFloat {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-15px) translateX(10px); }
+            50% { transform: translateY(-25px) translateX(-10px); }
+            75% { transform: translateY(-5px) translateX(5px); }
+        }
+
+        .hero h1 {
+            font-weight: 800;
+            font-size: clamp(2.3rem, 4.5vw, 3.2rem);
+            letter-spacing: -0.8px;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+        }
+        .solid-purple-text {
+            color: var(--purple-dark);
+            display: inline-block;
+            font-family: 'Arial Black', 'Impact', 'Segoe UI', sans-serif;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes shine {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .purple-shine {
+            background: linear-gradient(90deg,
+                var(--text) 0%,
+                var(--text) 85%,
+                #7c3aed 90%,
+                #7c3aed 92%,
+                var(--text) 97%,
+                var(--text) 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 5s linear infinite;
+            display: inline-block;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            max-width: 650px;
+            margin: 0.8rem auto 2rem;
+            position: relative;
+            z-index: 1;
+            min-height: 3.5rem;
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s step-end infinite;
+            color: var(--purple);
+            font-weight: 700;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .search-box {
+            display: flex;
+            gap: 6px;
+            max-width: 650px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 8px;
+            border-radius: 60px;
+            box-shadow: var(--shadow-md);
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        .search-box select {
+            flex: 1;
+            min-width: 130px;
+            border: none;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            appearance: none;
+            -webkit-appearance: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E") no-repeat right 8px center;
+        }
+        .search-box .divider {
+            width: 1px;
+            height: 30px;
+            background: var(--border);
+            align-self: center;
+        }
+        .btn-search {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .btn-search:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(232,168,73,0.4);
+        }
+        .btn-clear {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-light);
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: none;
+            white-space: nowrap;
+        }
+        .btn-clear:hover {
+            border-color: var(--purple);
+            color: var(--purple);
+        }
+
+        /* Stats strip */
+        .stats-strip {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: -20px 0 2rem;
+            position: relative;
+            z-index: 3;
+        }
+        .stat-item {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem 1.8rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            min-width: 120px;
+            border: 1px solid var(--border);
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--purple);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* ========== PROPERTY CARDS ========== */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .filter-tab {
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+            background: var(--white);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .filter-tab:hover { border-color: var(--primary); color: var(--primary-dark); }
+        .filter-tab.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+        }
+        .property-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid var(--border);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .property-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .property-card:hover {
+            transform: translateY(-6px) !important;
+            box-shadow: var(--shadow-lg);
+        }
+        .property-image {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+        }
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .property-card:hover .property-image img { transform: scale(1.07); }
+        .property-tag {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--primary);
+            color: #fff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+        .tag-rent { background: var(--primary); }
+        .tag-sale { background: var(--purple); }
+        .property-favorite {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: var(--transition);
+        }
+        .property-favorite.liked { background: #ef4444; color: #fff; }
+        .property-details { padding: 1.2rem 1.4rem; }
+        .property-price { font-size: 1.5rem; font-weight: 800; color: var(--purple); }
+        .property-price span { font-size: 0.85rem; font-weight: 500; color: var(--text-light); }
+        .property-title { font-weight: 700; margin: 4px 0; font-size: 1.05rem; }
+        .property-location { color: var(--text-light); font-size: 0.9rem; display: flex; align-items: center; gap: 4px; }
+        .property-features {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-light); }
+        .empty-state p { font-size: 1.1rem; margin-bottom: 1rem; }
+
+        .section-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text); letter-spacing: -0.5px; }
+        .section-subtitle { color: var(--text-light); margin-bottom: 2rem; }
+        .underline { width: 50px; height: 4px; background: var(--primary); border-radius: 2px; margin: 0.5rem 0 1.5rem; }
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .about-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f6ff 100%);
+            border-radius: var(--radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.1);
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--purple));
+            border-radius: 0 0 4px 4px;
+        }
+        .about-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(124, 58, 237, 0.15); border-color: var(--purple-light); }
+        .about-icon {
+            font-size: 3rem;
+            margin-bottom: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.08);
+            color: var(--purple);
+            transition: transform 0.3s ease;
+        }
+        .about-card:hover .about-icon { transform: scale(1.1) rotate(5deg); }
+        .about-card h3 { font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+        .about-card p { color: var(--text-light); font-size: 0.95rem; }
+
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .team-card { background: var(--white); border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .team-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 700; color: var(--primary-dark); background-size: cover; background-position: center; }
+        .team-card h3 { font-weight: 700; margin-bottom: 0.3rem; }
+        .team-card p { font-size: 0.9rem; color: var(--text-light); }
+
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .testimonial-card { background: var(--white); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; }
+        .testimonial-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; }
+        .testimonial-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.3rem; color: #fff; flex-shrink: 0; }
+        .testimonial-author { font-weight: 700; font-size: 1rem; }
+        .testimonial-role { font-size: 0.8rem; color: var(--text-light); }
+        .testimonial-text { font-size: 1rem; font-style: italic; color: var(--text); line-height: 1.7; }
+        .stars { color: #f59e0b; margin-bottom: 0.8rem; }
+
+        .contact-wrapper { max-width: 600px; margin: 0 auto; background: rgba(91,155,213,0.05); padding: 2.5rem 2rem; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center; }
+        .contact-wrapper h3 { font-size: 1.6rem; margin-bottom: 1.8rem; color: var(--text); }
+        .contact-wrapper form { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .contact-wrapper .name-num { display: flex; width: 90%; gap: 4%; margin-bottom: 1rem; }
+        .contact-wrapper .name-num input { width: 48%; padding: 12px 14px; border: 1px solid #333; border-radius: 5px; font-size: 0.95rem; font-family: var(--font); outline: none; background: var(--white); }
+        .contact-wrapper input[type="email"], .contact-wrapper textarea { width: 90%; padding: 12px 14px; border: 1px solid #333; border-radius: 5px; font-size: 0.95rem; font-family: var(--font); outline: none; background: var(--white); margin-bottom: 1rem; }
+        .contact-wrapper textarea { resize: vertical; min-height: 130px; }
+        .contact-wrapper button[type="submit"] { width: 90%; padding: 14px; background: #333; color: #fff; border: 1px solid #333; border-radius: 5px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; margin-top: 0.5rem; }
+        .contact-wrapper button[type="submit"]:hover { background: var(--blue); border-color: var(--blue); }
+        @media (max-width: 768px) { .contact-wrapper .name-num { flex-direction: column; width: 100%; gap: 1rem; } .contact-wrapper .name-num input { width: 100%; } .contact-wrapper input[type="email"], .contact-wrapper textarea, .contact-wrapper button[type="submit"] { width: 100%; } }
+
+        .btn { display: inline-block; padding: 12px 28px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: var(--transition); background: var(--primary); color: #fff; }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-purple { background: var(--purple); }
+        .btn-purple:hover { background: var(--purple-dark); }
+
+        .footer { background: #1e1b2e; color: #e2e8f0; padding: 1.5rem 1.5rem; margin-top: 2rem; }
+        .footer-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .footer-brand { display: flex; align-items: center; gap: 0.6rem; font-size: 0.95rem; }
+        .footer-brand span { font-weight: 700; font-size: 1rem; }
+        .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .footer-links a { color: #a5b4c2; text-decoration: none; font-size: 0.85rem; transition: var(--transition); }
+        .footer-links a:hover { color: var(--primary); }
+        .footer-copy { text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); max-width: 1300px; margin-left: auto; margin-right: auto; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+        .modal { background: var(--white); border-radius: var(--radius); padding: 2rem; max-width: 700px; width: 95%; max-height: 85vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-light); }
+
+        .toast { position: fixed; bottom: 20px; right: 20px; background: var(--purple); color: #fff; padding: 12px 24px; border-radius: 50px; font-weight: 600; z-index: 3000; box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: fixed; top: 68px; left: 0; right: 0; background: var(--white); flex-direction: column; padding: 1.5rem; border-bottom: 2px solid var(--border); box-shadow: var(--shadow-md); z-index: 999; }
+            .nav-links.active { display: flex; }
+            .mobile-toggle { display: block; }
+            .search-box { border-radius: 30px; flex-direction: column; gap:8px; padding:12px; }
+            .search-box .divider { display: none; }
+            .properties-grid { grid-template-columns: 1fr; }
+            .stats-strip { gap:1rem; }
+            .footer-container { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo" data-page="home"><span class="icon">🏠</span> MSC Real Estate</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#" data-page="home" class="active">Home</a></li>
+            <li><a href="#" data-page="properties">Properties</a></li>
+            <li><a href="#" data-page="about">About</a></li>
+            <li><a href="#" data-page="reviews">Reviews</a></li>
+            <li><a href="#" data-page="contact" class="btn-nav">Contact Us</a></li>
+        </ul>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+
+    <div id="app">
+        <section class="page active" id="page-home">
+            <div class="hero">
+                <div class="bubble" style="width: 20px; height: 20px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+                <div class="bubble purple-bubble" style="width: 25px; height: 25px; top: 20%; left: 85%; animation-delay: 1s;"></div>
+                <div class="bubble" style="width: 15px; height: 15px; top: 60%; left: 5%; animation-delay: 2s;"></div>
+                <div class="bubble purple-bubble" style="width: 30px; height: 30px; top: 75%; left: 80%; animation-delay: 0.5s;"></div>
+                <div class="bubble" style="width: 18px; height: 18px; top: 40%; left: 90%; animation-delay: 1.5s;"></div>
+                <div class="bubble purple-bubble" style="width: 22px; height: 22px; top: 85%; left: 15%; animation-delay: 2.5s;"></div>
+                <div class="bubble" style="width: 12px; height: 12px; top: 50%; left: 3%; animation-delay: 3s;"></div>
+                <div class="bubble purple-bubble" style="width: 28px; height: 28px; top: 15%; left: 70%; animation-delay: 0.8s;"></div>
+
+                <h1><span class="solid-purple-text">MSC REAL ESTATE</span><br><span class="purple-shine">HOYGA KIRAYNTA &amp; IIBINTA GURYAHA</span></h1>
+                <p id="typingText" class="typing-cursor"></p>
+                <div class="search-box">
+                    <select id="homeSearchLocation"><option value="" disabled selected>Magaalo</option><option value="Hargeisa">Hargeisa</option><option value="Borama">Borama</option><option value="Berbera">Berbera</option><option value="Burao">Burao</option><option value="Gabiley">Gabiley</option><option value="Sheikh">Sheikh</option><option value="Laas Geel">Laas Geel</option></select>
+                    <span class="divider"></span>
+                    <select id="homeSearchType"><option value="">🏘️ Nooca</option><option value="Rent">Kirada</option><option value="Sale">Iibka</option></select>
+                    <span class="divider"></span>
+                    <select id="homeSearchPrice"><option value="">💰 Qiimaha</option><option>1000</option><option>2000</option><option>3000</option><option>5000</option><option>10000</option></select>
+                    <button class="btn-search" onclick="searchFromHome()">🔍 Raadi</button>
+                    <button class="btn-clear" id="clearSearchBtn" onclick="clearSearch()">✕ Nadiifi</button>
+                </div>
+            </div>
+            <div class="stats-strip" id="homeStats"></div>
+            <h2 class="section-title" style="margin-bottom:0;">Guryaha la soo bandhigay</h2>
+            <div class="underline"></div>
+            <div class="filter-tabs" id="homeFilterTabs">
+                <button class="filter-tab active" data-filter="all">Dhammaan</button>
+                <button class="filter-tab" data-filter="Rent">Kirada</button>
+                <button class="filter-tab" data-filter="Sale">Iibka</button>
+            </div>
+            <div class="properties-grid" id="homePropertyGrid"></div>
+            <div style="text-align:center; margin-top:2rem;">
+                <a href="#" data-page="properties" class="btn btn-purple" style="padding:14px 40px;">Dhamaan</a>
+            </div>
+        </section>
+
+        <section class="page" id="page-properties">
+            <h2 class="section-title">Dhammaan Guryaha</h2>
+            <div class="underline"></div>
+            <div class="filter-tabs" id="propertiesFilterTabs">
+                <button class="filter-tab active" data-filter="all">Dhammaan</button>
+                <button class="filter-tab" data-filter="Rent">Kirada</button>
+                <button class="filter-tab" data-filter="Sale">Iibka</button>
+            </div>
+            <div class="properties-grid" id="propertiesGridFull"></div>
+        </section>
+
+        <section class="page" id="page-about">
+            <h2 class="section-title">Ku saabsan MSC Real Estate</h2>
+            <div class="underline"></div>
+            <p class="section-subtitle">Hadafkeennu waa in aan ka dhigno kiro iyo iibsashada guryaha kuwo sahlan, daah‑furan oo lagu qanco.</p>
+            <div class="about-grid">
+                <div class="about-card"><div class="about-icon">✅</div><h3>Liisaska La Hubiyay</h3><p>Guri kasta waxaa shakhsi ahaan loo baaraa kooxdeenna ka hor inta aan la soo bandhigin.</p></div>
+                <div class="about-card"><div class="about-icon">💰</div><h3>Kharash Qarsoon Ma Jiro</h3><p>Qiimayaal daah‑furan oo aan la yaab lahayn. Waxa aad arkaysaa waa waxa aad bixinaysaa.</p></div>
+                <div class="about-card"><div class="about-icon">⚡</div><h3>Boogashada Degdegga ah</h3><p>Ku xajiso gurigaaga kiro daqiiqado gudahood adigoo isticmaalaya nidaamkeenna fudud.</p></div>
+                <div class="about-card"><div class="about-icon">🛡️</div><h3>Dammiinadda Kiro</h3><p>Ma qanacsanayn? Ballan‑qaadkeenna 30‑maalmood wuxuu hubinayaa in aad hesho guri ku qalma.</p></div>
+            </div>
+            <div style="margin-top:4rem;"><h2 class="section-title">Kooxdeenna</h2><div class="underline"></div>
+                <div class="team-grid">
+                    <div class="team-card"><div class="team-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Maxamed+Fuaad&size=80&background=7c3aed&color=fff&bold=true');"></div><h3>Maxamed Fuaad</h3><p>Agaasimaha Guud & La‑taliyaha Guryaha</p><p style="font-size:0.85rem; margin-top:0.4rem;">10+ sano oo waayo‑aragnimo ah</p></div>
+                    <div class="team-card"><div class="team-avatar" style="background-image: url('https://ui-avatars.com/api/?name=Salmaan+Xuseen&size=80&background=7c3aed&color=fff&bold=true');"></div><h3>Salmaan Xuseen</h3><p>Maamulaha Suuqgeynta & Macaamiisha</p><p style="font-size:0.85rem; margin-top:0.4rem;">Khabiir ku ah isgaarsiinta</p></div>
+                    <div class="team-card"><div class="team-avatar" style="background-image: url('https://ui-avatars.com/api/?name=C/raxmaan+Mawliid&size=80&background=7c3aed&color=fff&bold=true');"></div><h3>C/raxmaan Mawliid</h3><p>Madaxa Qiimaynta & Horumarinta</p><p style="font-size:0.85rem; margin-top:0.4rem;">U qalma qiimaynta guryaha</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page" id="page-reviews">
+            <h2 class="section-title">Waxa ay leeyihiin macaamiisheenna</h2><div class="underline"></div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card"><div class="testimonial-header"><div class="testimonial-avatar" style="background-color: #7c3aed;">FC</div><div><div class="testimonial-author">Fadumo Cali</div><div class="testimonial-role">Kiraysatay Hargeisa</div></div></div><div class="stars">★★★★★</div><p class="testimonial-text">"MSC Real Estate waxay iga caawisay in aan helo guri fiican oo jaban. Kooxda taageerada ayaa ahayd mid aad u fiican."</p></div>
+                <div class="testimonial-card"><div class="testimonial-header"><div class="testimonial-avatar" style="background-color: #e8a849;">MY</div><div><div class="testimonial-author">Maxamed Yuusuf</div><div class="testimonial-role">Kiraysatay Borama</div></div></div><div class="stars">★★★★★</div><p class="testimonial-text">"Waxaan isticmaalay boggag badan, laakiin kan ayaa ugu daah‑furan oo qiime jaban. Aad ayaan ugu faraxsanahay."</p></div>
+                <div class="testimonial-card"><div class="testimonial-header"><div class="testimonial-avatar" style="background-color: #5b9bd5;">AC</div><div><div class="testimonial-author">Aamina Cumar</div><div class="testimonial-role">Kiraysatay Berbera</div></div></div><div class="stars">★★★★★</div><p class="testimonial-text">"Adeeggoodu waa heer sare. Waxay igu caawiyeen in aan guri ku habboon helo hal todobaad gudihiis."</p></div>
+                <div class="testimonial-card"><div class="testimonial-header"><div class="testimonial-avatar" style="background-color: #10b981;">XD</div><div><div class="testimonial-author">Xasan Dheere</div><div class="testimonial-role">Kireystay Hargeisa</div></div></div><div class="stars">★★★★★</div><p class="testimonial-text">"Nidaam deg‑deg ah oo aan dhib lahayn. Waxaan guri ka helay isla maalintii aan codsaday!"</p></div>
+            </div>
+        </section>
+
+        <section class="page" id="page-contact">
+            <h2 class="section-title">Nala Soo Xiriir</h2><div class="underline"></div>
+            <div class="contact-wrapper">
+                <h3>La <span style="color:var(--blue);">Xiriir</span></h3>
+                <form>
+                    <div class="name-num"><input type="text" name="name" placeholder="Magacaaga oo buuxa" required><input type="text" name="phone" id="phone" placeholder="Lambarka taleefanka" required></div>
+                    <input type="email" name="email" placeholder="Cinwaanka email (ikhtiyaari)">
+                    <textarea cols="31" rows="8" placeholder="Fariintaada halkan ku qor ..." required></textarea>
+                    <button type="submit">Dir Fariin</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <div id="propertyModal" class="modal-overlay" style="display:none;"><div class="modal"><button class="modal-close" onclick="closeModal()">&times;</button><div id="modalContent"></div></div></div>
+    <div id="toast" class="toast" style="display:none;"></div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand"><span>🏠 MSC Real Estate</span><small style="color:#a5b4c2;">Kiro & Iib Guryaha</small></div>
+            <div class="footer-links"><a href="#" data-page="home">Guriga</a><a href="#" data-page="properties">Guryaha</a><a href="#" data-page="about">Xogta</a><a href="#" data-page="contact">Nala Soo Xiriir</a></div>
+        </div>
+        <div class="footer-copy">&copy; 2025 MSC Real Estate. Xuquuqda oo dhan wey reeban yihiin.</div>
+    </footer>
+
+    <script>
+        (function() {
+            const fullText = "Somaliland, meesha laga helo dhammaan guryaha aad u baahan tahay, kiro iyo iib ah, qiimayaal kugu raali gelinaya iyo adeeg lagu kalsoonaan karo.";
+            const typingEl = document.getElementById('typingText');
+            const words = fullText.split(' ');
+            let wordIndex = 0, charIndex = 0, currentWord = '', isDeleting = false;
+            let typeSpeed = 60, pauseBetweenCycles = 3500;
+
+            function typeLoop() {
+                if (!typingEl) return;
+                if (!isDeleting) {
+                    if (wordIndex < words.length) {
+                        currentWord = words[wordIndex];
+                        if (charIndex < currentWord.length) {
+                            charIndex++;
+                            typingEl.textContent = words.slice(0, wordIndex).join(' ') + (wordIndex > 0 ? ' ' : '') + currentWord.slice(0, charIndex);
+                            typingEl.classList.add('typing-cursor');
+                            setTimeout(typeLoop, typeSpeed);
+                        } else {
+                            wordIndex++; charIndex = 0;
+                            if (wordIndex < words.length) {
+                                typingEl.textContent = words.slice(0, wordIndex).join(' ') + ' ';
+                                typingEl.classList.add('typing-cursor');
+                                setTimeout(typeLoop, typeSpeed + 40);
+                            } else {
+                                typingEl.textContent = fullText;
+                                typingEl.classList.add('typing-cursor');
+                                isDeleting = true;
+                                setTimeout(typeLoop, pauseBetweenCycles);
+                            }
+                        }
+                    }
+                } else {
+                    if (wordIndex > 0) {
+                        if (charIndex === 0) { wordIndex--; currentWord = words[wordIndex]; charIndex = currentWord.length; }
+                        if (charIndex > 0) {
+                            charIndex--;
+                            typingEl.textContent = words.slice(0, wordIndex).join(' ') + (wordIndex > 0 ? ' ' : '') + currentWord.slice(0, charIndex);
+                            typingEl.classList.add('typing-cursor');
+                            setTimeout(typeLoop, typeSpeed * 0.6);
+                        } else {
+                            wordIndex = 0; charIndex = 0; isDeleting = false;
+                            typingEl.textContent = '';
+                            typingEl.classList.add('typing-cursor');
+                            setTimeout(typeLoop, 300);
+                        }
+                    } else {
+                        wordIndex = 0; charIndex = 0; isDeleting = false;
+                        typingEl.textContent = '';
+                        typingEl.classList.add('typing-cursor');
+                        setTimeout(typeLoop, 300);
+                    }
+                }
+            }
+            setTimeout(typeLoop, 500);
+
+            let favorites = new Set(JSON.parse(localStorage.getItem('msc_favorites') || '[]'));
+            function saveFavorites() { localStorage.setItem('msc_favorites', JSON.stringify([...favorites])); }
+
+            const featuredProperties = [
+                { id:'p1', type:'Rent', title:'Modern Skyline Loft', location:'Hargeisa, Maroodi Jeex', price:3200, beds:2, baths:2, sqft:1250, amenities:['Parking','Gym','WiFi'], image:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop', tag:'Featured', featured: true },
+                { id:'p2', type:'Rent', title:'Guriga Qoyska ee Ballaaran', location:'Borama, Awdal', price:2800, beds:4, baths:3, sqft:2200, amenities:['Pool','Garden','Parking'], image:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop', tag:'Cusub', featured: true },
+                { id:'p3', type:'Sale', title:'Dabaq Raaxo leh Magaalada', location:'Hargeisa, Dhexe', price:450000, beds:1, baths:1, sqft:950, amenities:['Gym','Pool','Balcony'], image:'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&h=400&fit=crop', tag:'Premium', featured: true },
+                { id:'p4', type:'Rent', title:'Studio Cozy oo Farshaxan', location:'Berbera, Saaxil', price:1400, beds:0, baths:1, sqft:550, amenities:['WiFi'], image:'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=600&h=400&fit=crop', tag:'Qiimo', featured: true },
+                { id:'p5', type:'Rent', title:'Dabaq Webiga dhinaciisa', location:'Burao, Togdheer', price:2100, beds:2, baths:1, sqft:1050, amenities:['Parking','Balcony'], image:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop', tag:'Kulul', featured: true },
+                { id:'p6', type:'Sale', title:'Villa Xeebta Berbera', location:'Berbera, Saaxil', price:550000, beds:5, baths:4, sqft:3400, amenities:['Pool','Garden','Parking','Balcony'], image:'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop', tag:'Raaxo', featured: true },
+                { id:'p7', type:'Rent', title:'Guri leh Beerta daaqada', location:'Gabiley, Maroodi Jeex', price:1950, beds:1, baths:1, sqft:820, amenities:['Garden','Parking'], image:'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop', tag:'Heer Sare', featured: true },
+                { id:'p8', type:'Sale', title:'Cabin Buuraleyda Sheikh', location:'Sheikh, Saaxil', price:320000, beds:3, baths:2, sqft:1800, amenities:['Fireplace','Garden','Parking'], image:'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop', tag:'Soo Jiidasho', featured: true },
+                { id:'p9', type:'Rent', title:'Loft Magaalo oo wanaagsan', location:'Hargeisa, Xaafadda Jigjiga Yar', price:2600, beds:1, baths:1, sqft:900, amenities:['Gym','WiFi','Balcony'], image:'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop', tag:'Cusub', featured: true },
+                { id:'p10', type:'Sale', title:'Guri Taariikhi ah oo Wanaagsan', location:'Borama, Awdal', price:780000, beds:4, baths:3, sqft:2600, amenities:['Fireplace','Garden','Parking'], image:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop', tag:'Hiddaha', featured: true },
+                { id:'p11', type:'Rent', title:'Cottage Harada Laas Geel', location:'Laas Geel, Maroodi Jeex', price:3500, beds:3, baths:2, sqft:1400, amenities:['Dock','Garden','Parking'], image:'https://images.unsplash.com/photo-1598228723793-52759bba239c?w=600&h=400&fit=crop', tag:'Muuqaal', featured: true },
+                { id:'p12', type:'Sale', title:'Dabaq Penthouse ah Hargeisa', location:'Hargeisa, Madaxtooyada', price:1200000, beds:2, baths:2, sqft:2100, amenities:['Pool','Gym','Balcony','Parking'], image:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop', tag:'Heerka Koowaad', featured: true },
+            ];
+            const additionalProperties = [
+                { id:'p13', type:'Rent', title:'Apartment Raaxo leh Hargeisa', location:'Hargeisa, Dhexe', price:1800, beds:2, baths:1, sqft:950, amenities:['Parking','WiFi'], image:'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop', tag:'Cusub', featured: false },
+                { id:'p14', type:'Rent', title:'Guri Yar oo Ballaaran', location:'Borama, Awdal', price:2200, beds:3, baths:2, sqft:1600, amenities:['Garden','Parking'], image:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop', tag:'Featured', featured: false },
+                { id:'p15', type:'Sale', title:'Guri Dhismo Casri ah', location:'Hargeisa, Madaxtooyada', price:680000, beds:4, baths:3, sqft:2400, amenities:['Pool','Gym','Balcony'], image:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop', tag:'Premium', featured: false },
+                { id:'p16', type:'Rent', title:'Qolka Jiifka ee Wanaagsan', location:'Berbera, Saaxil', price:1200, beds:1, baths:1, sqft:600, amenities:['WiFi','Parking'], image:'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=600&h=400&fit=crop', tag:'Qiimo', featured: false },
+                { id:'p17', type:'Rent', title:'Guri Magaalada Burao', location:'Burao, Togdheer', price:1500, beds:2, baths:1, sqft:800, amenities:['Parking'], image:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop', tag:'Cusub', featured: false },
+                { id:'p18', type:'Sale', title:'Villa Berbera Xeebta', location:'Berbera, Saaxil', price:420000, beds:4, baths:3, sqft:2800, amenities:['Pool','Garden','Parking'], image:'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop', tag:'Raaxo', featured: false },
+                { id:'p19', type:'Rent', title:'Dabaq Casri ah Gabiley', location:'Gabiley, Maroodi Jeex', price:1700, beds:1, baths:1, sqft:700, amenities:['WiFi','Balcony'], image:'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop', tag:'Heer Sare', featured: false },
+                { id:'p20', type:'Sale', title:'Guri Dhisme Dhaqameed', location:'Sheikh, Saaxil', price:280000, beds:3, baths:2, sqft:1900, amenities:['Garden','Fireplace'], image:'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&h=400&fit=crop', tag:'Hiddaha', featured: false },
+                { id:'p21', type:'Rent', title:'Apartment Laas Geel', location:'Laas Geel, Maroodi Jeex', price:2000, beds:2, baths:1, sqft:880, amenities:['Parking','WiFi'], image:'https://images.unsplash.com/photo-1598228723793-52759bba239c?w=600&h=400&fit=crop', tag:'Muuqaal', featured: false },
+                { id:'p22', type:'Sale', title:'Guri Wanaagsan Hargeisa', location:'Hargeisa, Dhexe', price:550000, beds:5, baths:4, sqft:3200, amenities:['Pool','Gym','Parking','Balcony'], image:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop', tag:'Heerka Koowaad', featured: false },
+                { id:'p23', type:'Rent', title:'Guri Bilaash ah (Muddo)', location:'Borama, Awdal', price:900, beds:1, baths:1, sqft:450, amenities:['WiFi'], image:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop', tag:'Qiimo', featured: false },
+                { id:'p24', type:'Rent', title:'Apartment Weyn Berbera', location:'Berbera, Saaxil', price:2500, beds:3, baths:2, sqft:1500, amenities:['Parking','Pool','Gym'], image:'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&h=400&fit=crop', tag:'Premium', featured: false },
+                { id:'p25', type:'Sale', title:'Guri Casri ah Burao', location:'Burao, Togdheer', price:380000, beds:3, baths:2, sqft:2100, amenities:['Garden','Parking'], image:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop', tag:'Cusub', featured: false },
+            ];
+            const allProperties = [...featuredProperties, ...additionalProperties];
+            let currentPage = 'home', homeFilter = 'all', propertiesFilter = 'all';
+            let statsAnimated = false;
+            let fluctuationIntervals = [];
+
+            function showPage(pageId) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                const pageEl = document.getElementById('page-' + pageId);
+                if (pageEl) pageEl.classList.add('active');
+                document.querySelectorAll('[data-page]').forEach(el => { el.classList.toggle('active', el.dataset.page === pageId); });
+                if (currentPage === 'home' && pageId !== 'home') {
+                    fluctuationIntervals.forEach(clearInterval);
+                    fluctuationIntervals = [];
+                }
+                currentPage = pageId;
+                window.location.hash = pageId;
+                window.scrollTo({ top:0, behavior:'smooth' });
+                if (pageId === 'home') {
+                    statsAnimated = false;
+                    renderHomePage();
+                }
+                if (pageId === 'properties') renderPropertiesPage();
+                document.getElementById('navLinks').classList.remove('active');
+            }
+
+            window.addEventListener('hashchange', () => {
+                const hash = window.location.hash.replace('#', '');
+                if (hash && document.getElementById('page-' + hash)) showPage(hash);
+                else showPage('home');
+            });
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('[data-page]');
+                if (link) { e.preventDefault(); const page = link.dataset.page; if (page) showPage(page); }
+            });
+            document.getElementById('mobileToggle').addEventListener('click', function() { document.getElementById('navLinks').classList.toggle('active'); });
+
+            function renderPropertyCard(p) {
+                const priceStr = p.type === 'Sale' ? '$' + p.price.toLocaleString() : '$' + p.price.toLocaleString() + '<span>/bil</span>';
+                const tagClass = p.type === 'Rent' ? 'tag-rent' : 'tag-sale';
+                return `<div class="property-card" data-id="${p.id}" onclick="openPropertyDetail('${p.id}')">
+                    <div class="property-image"><img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop'"><span class="property-tag ${tagClass}">${p.tag || (p.type === 'Rent' ? 'KIRO' : 'IIB')}</span><button class="property-favorite ${favorites.has(p.id)?'liked':''}" onclick="event.stopPropagation(); toggleFavorite('${p.id}')">${favorites.has(p.id)?'❤️':'♡'}</button></div>
+                    <div class="property-details"><div class="property-price">${priceStr}</div><div class="property-title">${p.title}</div><div class="property-location">📍 ${p.location}</div><div class="property-features"><span>🛏️ ${p.beds > 0 ? p.beds + ' Qol' : 'Studio'}</span><span>🛁 ${p.baths} Bath</span><span>📐 ${p.sqft.toLocaleString()} sqft</span></div></div>
+                </div>`;
+            }
+
+            function renderGrid(containerId, props) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                if (props.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><p>Wax guryo ah lama helin.</p><p>Fadlan balaari shuruudahaaga ama nadiifi shaandhaynta.</p></div>`;
+                    return;
+                }
+                container.innerHTML = props.map(p => renderPropertyCard(p)).join('');
+                observeCards();
+                attachFavoriteListeners();
+            }
+
+            function renderHomePage() {
+                // clear existing fluctuation intervals before rebuilding stats
+                fluctuationIntervals.forEach(clearInterval);
+                fluctuationIntervals = [];
+
+                const featured = allProperties.filter(p => p.featured);
+                const statsHTML = `
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="${allProperties.length}" data-min="22" data-max="25" data-suffix="">0</div>
+                        <div class="stat-label">Guryaha Firfircoon</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="6" data-min="5" data-max="8" data-suffix="+">0</div>
+                        <div class="stat-label">Magaalo</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="98" data-min="95" data-max="98" data-suffix="%">0</div>
+                        <div class="stat-label">Qanacsanaanta</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Taageero</div>
+                    </div>`;
+                document.getElementById('homeStats').innerHTML = statsHTML;
+                document.querySelectorAll('#homeFilterTabs .filter-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.filter === homeFilter);
+                    tab.onclick = () => { homeFilter = tab.dataset.filter; renderHomePage(); };
+                });
+                let filtered = homeFilter === 'all' ? featured : featured.filter(p => p.type === homeFilter);
+                renderGrid('homePropertyGrid', filtered);
+                if (!statsAnimated) observeStats();
+            }
+
+            function renderPropertiesPage() {
+                document.querySelectorAll('#propertiesFilterTabs .filter-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.filter === propertiesFilter);
+                    tab.onclick = () => { propertiesFilter = tab.dataset.filter; renderPropertiesPage(); };
+                });
+                let filtered = propertiesFilter === 'all' ? allProperties : allProperties.filter(p => p.type === propertiesFilter);
+                renderGrid('propertiesGridFull', filtered);
+            }
+
+            function attachFavoriteListeners() {
+                document.querySelectorAll('.property-favorite').forEach(btn => {
+                    btn.onclick = function(e) { e.stopPropagation(); const id = this.closest('.property-card').dataset.id; toggleFavorite(id); };
+                });
+            }
+
+            window.toggleFavorite = function(id) {
+                if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
+                saveFavorites();
+                if (currentPage === 'home') renderHomePage();
+                if (currentPage === 'properties') renderPropertiesPage();
+                showToast(favorites.has(id) ? 'Waxaad ku dartay liiska ❤️' : 'Waxaad ka saartay liiska');
+            };
+
+            window.openPropertyDetail = function(id) {
+                const p = allProperties.find(pr => pr.id === id);
+                if (!p) return;
+                const priceStr = p.type === 'Sale' ? '$' + p.price.toLocaleString() : '$' + p.price.toLocaleString() + '/bil';
+                document.getElementById('modalContent').innerHTML = `<img src="${p.image}" style="width:100%;max-height:350px;object-fit:cover;border-radius:8px;" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=500&fit=crop'"><h2 style="margin-top:1rem;">${p.title}</h2><span class="property-tag ${p.type==='Rent'?'tag-rent':'tag-sale'}" style="position:static; display:inline-block; margin-bottom:0.5rem;">${p.type.toUpperCase()}</span><div style="font-size:1.6rem; font-weight:800; color:var(--purple);">${priceStr}</div><p>📍 ${p.location}</p><p>${p.amenities.join(' · ')}</p><div style="display:flex; gap:1rem; margin:1rem 0;"><span>🛏️ ${p.beds > 0 ? p.beds + ' Qol' : 'Studio'}</span><span>🛁 ${p.baths} Bath</span><span>📐 ${p.sqft.toLocaleString()} sqft</span></div><p>Gurigan waa mid si fiican loo dayactiray oo ku yaal aag aad u wanaagsan. Wuxuu leeyahay dhammaan adeegyada aasaasiga ah.</p><button class="btn" onclick="showToast('Codsigaaga waa la diiwaangeliyey!'); closeModal();">Waan xiisaynayaa</button>`;
+                document.getElementById('propertyModal').style.display = 'flex';
+            };
+
+            window.closeModal = function() { document.getElementById('propertyModal').style.display = 'none'; };
+            document.getElementById('propertyModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+            // --- Counter & Fluctuation ---
+            function animateCounter(el) {
+                const target = parseInt(el.dataset.count);
+                const suffix = el.dataset.suffix || '';
+                const duration = 2000;
+                const startTime = performance.now();
+                function update(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const current = Math.round(progress * target);
+                    el.textContent = current + suffix;
+                    if (progress < 1) requestAnimationFrame(update);
+                    else el.textContent = target + suffix;
+                }
+                requestAnimationFrame(update);
+            }
+
+            function startFluctuation(el, base, min, max) {
+                let currentValue = base;
+                const interval = setInterval(() => {
+                    const delta = Math.random() < 0.5 ? 1 : -1;
+                    currentValue = Math.min(Math.max(currentValue + delta, min), max);
+                    el.textContent = currentValue + (el.dataset.suffix || '');
+                }, 3000 + Math.random() * 2000);
+                fluctuationIntervals.push(interval);
+            }
+
+            function observeStats() {
+                const statsStrip = document.getElementById('homeStats');
+                if (!statsStrip) return;
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const counters = statsStrip.querySelectorAll('.stat-number[data-count]');
+                            counters.forEach(el => animateCounter(el));
+                            setTimeout(() => {
+                                counters.forEach(el => {
+                                    const base = parseInt(el.dataset.count);
+                                    const min = parseInt(el.dataset.min) || base - 3;
+                                    const max = parseInt(el.dataset.max) || base + 3;
+                                    startFluctuation(el, base, min, max);
+                                });
+                            }, 2100);
+                            statsAnimated = true;
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                observer.observe(statsStrip);
+            }
+
+            function observeCards() {
+                const cards = document.querySelectorAll('.property-card:not(.revealed)');
+                if (!('IntersectionObserver' in window)) { cards.forEach(c => c.classList.add('revealed')); return; }
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); } });
+                }, { threshold: 0.1 });
+                cards.forEach(c => observer.observe(c));
+            }
+
+            window.searchFromHome = function() {
+                const city = document.getElementById('homeSearchLocation').value;
+                const type = document.getElementById('homeSearchType').value;
+                const maxPrice = parseInt(document.getElementById('homeSearchPrice').value) || Infinity;
+                let filtered = allProperties.filter(p => p.featured);
+                if (city) filtered = filtered.filter(p => p.location.toLowerCase().includes(city.toLowerCase()));
+                if (type) filtered = filtered.filter(p => p.type === type);
+                if (maxPrice < Infinity) filtered = filtered.filter(p => p.price <= maxPrice);
+                homeFilter = 'all';
+                document.querySelectorAll('#homeFilterTabs .filter-tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('#homeFilterTabs [data-filter="all"]').classList.add('active');
+                renderGrid('homePropertyGrid', filtered);
+                document.getElementById('clearSearchBtn').style.display = 'inline-block';
+                showToast(`Waxaa la helay ${filtered.length} guri`);
+            };
+
+            window.clearSearch = function() {
+                document.getElementById('homeSearchLocation').selectedIndex = 0;
+                document.getElementById('homeSearchType').selectedIndex = 0;
+                document.getElementById('homeSearchPrice').selectedIndex = 0;
+                document.getElementById('clearSearchBtn').style.display = 'none';
+                homeFilter = 'all';
+                statsAnimated = false; // <-- reset animation flag so counters restart
+                renderHomePage();
+            };
+
+            window.showToast = function(msg) {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg; toast.style.display = 'block';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => { toast.style.display = 'none'; }, 2500);
+            };
+
+            const contactForm = document.querySelector('#page-contact form');
+            if (contactForm) { contactForm.addEventListener('submit', function(e) { e.preventDefault(); showToast('Fariintaada waa la diray! Dhawaan ayaan kula soo xiriir doonaa.'); contactForm.reset(); }); }
+
+            function init() {
+                const hash = window.location.hash.replace('#', '');
+                if (hash && document.getElementById('page-' + hash)) showPage(hash);
+                else showPage('home');
+            }
+            init();
+        })();
+    </script>
+</body>
+</html>
